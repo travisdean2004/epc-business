@@ -1,0 +1,64 @@
+{
+  "name": "EPC Business MCP Server",
+  "description": "Standardized API access for Hermes to leads, crypto, applicants, and CRM",
+  "resources": [
+    {
+      "name": "leads",
+      "description": "Lead capture and management",
+      "endpoints": [
+        {"method": "GET", "path": "/leads", "description": "List all leads"},
+        {"method": "POST", "path": "/leads", "description": "Create new lead"},
+        {"method": "GET", "path": "/leads/{id}", "description": "Get lead details"},
+        {"method": "PUT", "path": "/leads/{id}", "description": "Update lead status"}
+      ]
+    },
+    {
+      "name": "applicants",
+      "description": "Indeed and recruiting applicants",
+      "endpoints": [
+        {"method": "GET", "path": "/applicants", "description": "List new applicants"},
+        {"method": "GET", "path": "/applicants/{id}", "description": "Get applicant details"}
+      ]
+    },
+    {
+      "name": "crypto",
+      "description": "Solana trading and account management",
+      "endpoints": [
+        {"method": "GET", "path": "/crypto/balance", "description": "Check wallet balance"},
+        {"method": "POST", "path": "/crypto/trade", "description": "Execute trade"},
+        {"method": "GET", "path": "/crypto/positions", "description": "List open positions"}
+      ]
+    },
+    {
+      "name": "notifications",
+      "description": "Send alerts to Telegram",
+      "endpoints": [
+        {"method": "POST", "path": "/notify/hvac", "description": "Send HVAC lead alert"},
+        {"method": "POST", "path": "/notify/recruiting", "description": "Send recruiting alert"},
+        {"method": "POST", "path": "/notify/trading", "description": "Send trade confirmation"}
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "name": "check_new_leads",
+      "description": "Check for new Facebook leads (HVAC, recruiting)",
+      "params": ["source", "since"]
+    },
+    {
+      "name": "get_indeed_applicants",
+      "description": "Fetch new Indeed applicants (weekend only)",
+      "params": ["weekend_only"]
+    },
+    {
+      "name": "execute_crypto_trade",
+      "description": "Buy/sell on Solana DEX",
+      "params": ["coin", "amount", "entry_price", "exit_targets"]
+    },
+    {
+      "name": "send_telegram_alert",
+      "description": "Post message to Telegram chat",
+      "params": ["chat_id", "message", "format"]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "Solana FOMO Auto-Trade",
+  "description": "Monitor FOMO \u2192 copy Orangie trades \u2192 execute on Jupiter",
+  "nodes": [
+    {
+      "name": "Check Orangie",
+      "type": "api",
+      "endpoint": "fomo.family"
+    },
+    {
+      "name": "Validate Trade",
+      "type": "code",
+      "logic": "entry <$1M MC, exits configured"
+    },
+    {
+      "name": "Execute on Jupiter",
+      "type": "api",
+      "endpoint": "api.jup.ag"
+    },
+    {
+      "name": "Report Trade",
+      "type": "telegram",
+      "chat": "trading chat"
+    }
+  ]
+}

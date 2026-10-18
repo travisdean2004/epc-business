@@ -1,0 +1,26 @@
+{
+  "name": "Lead Capture \u2192 Telegram",
+  "description": "New lead from Facebook \u2192 Telegram notification",
+  "nodes": [
+    {
+      "name": "Facebook Forms",
+      "type": "webhook",
+      "trigger": true
+    },
+    {
+      "name": "Deduplicate",
+      "type": "code",
+      "logic": "check seen_leads.json"
+    },
+    {
+      "name": "Send Telegram",
+      "type": "http",
+      "endpoint": "api.telegram.org/bot"
+    },
+    {
+      "name": "Log to DB",
+      "type": "database",
+      "target": "leads table"
+    }
+  ]
+}

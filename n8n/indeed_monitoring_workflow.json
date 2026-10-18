@@ -1,0 +1,26 @@
+{
+  "name": "Indeed Applicants Monitor",
+  "description": "Check Indeed every 5 min \u2192 post new applicants",
+  "nodes": [
+    {
+      "name": "Schedule",
+      "type": "cron",
+      "frequency": "every 5m"
+    },
+    {
+      "name": "Scrape Indeed",
+      "type": "http",
+      "endpoint": "employers.indeed.com"
+    },
+    {
+      "name": "Compare with DB",
+      "type": "code",
+      "logic": "find new applicants"
+    },
+    {
+      "name": "Send to HOT LEADS",
+      "type": "telegram",
+      "chat": "-5306696575"
+    }
+  ]
+}
