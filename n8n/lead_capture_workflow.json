@@ -1,26 +1,116 @@
 {
-  "name": "Lead Capture \u2192 Telegram",
-  "description": "New lead from Facebook \u2192 Telegram notification",
+  "name": "EPC Lead Capture Pipeline",
   "nodes": [
     {
-      "name": "Facebook Forms",
+      "name": "Facebook Lead Form",
       "type": "webhook",
-      "trigger": true
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "path": "epc-lead-webhook",
+        "method": "POST"
+      }
     },
     {
-      "name": "Deduplicate",
-      "type": "code",
-      "logic": "check seen_leads.json"
+      "name": "Parse Lead Data",
+      "type": "set",
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "key": "name",
+              "value": "={{ $json.first_name }} {{ $json.last_name }}"
+            },
+            {
+              "key": "phone",
+              "value": "={{ $json.phone_number }}"
+            },
+            {
+              "key": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "key": "source",
+              "value": "facebook"
+            },
+            {
+              "key": "created_at",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Supabase Insert",
+      "type": "supabase",
+      "position": [
+        650,
+        300
+      ],
+      "parameters": {
+        "method": "insert",
+        "table": "leads",
+        "data": "={{ $json }}"
+      }
     },
     {
       "name": "Send Telegram",
-      "type": "http",
-      "endpoint": "api.telegram.org/bot"
+      "type": "telegram",
+      "position": [
+        850,
+        300
+      ],
+      "parameters": {
+        "chatId": "-5476036884",
+        "text": "\ud83d\udd25 NEW LEAD\\n{{ $json.name }}\\n\ud83d\udcde {{ $json.phone }}\\n\ud83d\udce7 {{ $json.email }}"
+      }
     },
     {
-      "name": "Log to DB",
-      "type": "database",
-      "target": "leads table"
+      "name": "Log to Hermes",
+      "type": "http",
+      "position": [
+        1050,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/leads/log",
+        "body": "={{ $json }}"
+      }
     }
-  ]
+  ],
+  "connections": {
+    "Facebook Lead Form": [
+      {
+        "node": "Parse Lead Data",
+        "type": "main"
+      }
+    ],
+    "Parse Lead Data": [
+      {
+        "node": "Supabase Insert",
+        "type": "main"
+      }
+    ],
+    "Supabase Insert": [
+      {
+        "node": "Send Telegram",
+        "type": "main"
+      }
+    ],
+    "Send Telegram": [
+      {
+        "node": "Log to Hermes",
+        "type": "main"
+      }
+    ]
+  }
 }

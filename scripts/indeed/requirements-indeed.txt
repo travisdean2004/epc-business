@@ -1,0 +1,90 @@
+# =============================================================================
+#       *** Indeed Job Scraper - Python Dependencies ***
+# =============================================================================
+# Local: pip install -r requirements.txt
+# Docker: Automatically installed during image build
+# =============================================================================
+
+# ___ SSL certificate handling | <-- install first:
+certifi>=2023.0.0
+
+# =============================================================================
+#                   *** PRIMARY SCRAPER (RECOMMENDED) ***
+# =============================================================================
+
+# ___ SeleniumBase UC Mode | <-- best Cloudflare high % bypass:
+# ___ UC Mode = Undetected Chrome with stealth patches:
+seleniumbase>=4.20.0
+
+# ___ PyAutoGUI | <-- automated Cloudflare checkbox clicking:
+# ___ Only works in local mode (not Docker/headless):
+pyautogui>=0.9.54
+
+# =============================================================================
+#                   *** ALTERNATIVE SCRAPERS (OPTIONAL) ***
+# =============================================================================
+
+# ___ Playwright | <-- Alternative browser automation:
+playwright>=1.40.0
+
+# ___ Camoufox | <-- anti-detect browser (experimental):
+# ___ Note: Unreliable:
+# ___ For zsh: use quotes -> pip install "camoufox[geoip]"
+camoufox[geoip]>=0.4.0
+
+# =============================================================================
+#                       *** UTILITY DEPENDENCIES ***
+# =============================================================================
+
+# ___ HTTP requests | <-- for API scrapers:
+requests>=2.31.0
+
+# ___ BeautifulSoup | <-- HTML parsing (scrape.do):
+beautifulsoup4>=4.12.0
+
+# ___ Local report server (Jobs/Search API + interactive UI):
+fastapi>=0.115.0
+uvicorn>=0.32.0
+
+# =============================================================================
+#                           *** POST-INSTALL ***
+# =============================================================================
+#
+# === LOCAL SETUP ===
+#
+# 1. Install dependencies:
+#    pip install -r requirements.txt
+#
+# 2. Fix SSL (macOS only):
+#    export SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())")
+#    export REQUESTS_CA_BUNDLE=$(python3 -c "import certifi; print(certifi.where())")
+#
+# 4. Test installation:
+#    python src/main.py --help
+#
+# === DOCKER SETUP ===
+#
+# No manual steps needed - everything handled in Dockerfile:
+#   - Chromium installed from apt
+#   - Xvfb for virtual display
+#   - All Python deps auto-installed
+#
+# Build & run:
+#   docker-compose -f build/docker-compose.yml build
+#   docker-compose -f build/docker-compose.yml run --rm scraper-auto
+#
+# =============================================================================
+#                   *** SCRAPER USAGE EXAMPLES ***
+# =============================================================================
+#
+# Local with SeleniumBase:
+#   python src/main.py --auto --scraper seleniumbase --query "DevOps Engineer" --location "Remote" --max 50
+#   python src/main.py --auto --scraper seleniumbase --query "Sr Software Engineer" --location "Remote" --remote --min-salary 150000 --max-salary 250000 --days 7 --max 50 --screenshots
+#
+# Docker with SeleniumBase:
+#   docker-compose -f build/docker-compose.yml run --rm scraper-auto python src/main.py --auto --scraper seleniumbase --query "DevOps Engineer" --location "Remote" --max 50
+#
+# Local with Playwright (if enabled):
+#   python src/main.py --auto --scraper playwright --query "DevOps Engineer" --location "Remote" --max 50
+#
+# =============================================================================
